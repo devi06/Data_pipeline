@@ -1,0 +1,33 @@
+1st step:TO create table in snowflake command prompt use this code
+
+CREATE TABLE ORDER_ITEMS 
+   (	"ORDER_ID" NUMBER(12,0), 
+	"ITEM_ID" NUMBER(12,0), 
+	"PRODUCT_ID" NUMBER(12,0) NOT NULL, 
+	"QUANTITY" NUMBER(8,2) NOT NULL, 
+	"UNIT_PRICE" NUMBER(8,2) NOT NULL, 
+	 CONSTRAINT "PK_ORDER_ITEMS" PRIMARY KEY ("ORDER_ID", "ITEM_ID"));
+
+2nd step:TO import the data from s3 and put this in snowflake use this code  
+
+copy into ORDER_ITEMS
+from s3://shubhanandya/ORDER_ITEMS.csv credentials=(aws_key_id='AKIA6ERB5MROQWZOIFSW' aws_secret_key='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')
+file_format = (type = csv field_optionally_enclosed_by='"')
+on_error = 'continue';
+
+
+3rdstep:export the assesssmemt results into s3
+
+copy into s3://shubhanandya/SQL_ASSESSMENT_1.csv 
+from (select c.COUNTRY_NAME,w.WAREHOUSE_NAME,sum(i.QUANTITY) 
+from warehouses w 
+JOIN inventories i 
+ON w.WAREHOUSE_ID=i.WAREHOUSE_ID
+JOIN locations l 
+ON l.LOCATION_ID=w.LOCATION_ID
+JOIN COUNTRIES c 
+ON c.COUNTRY_ID=l.COUNTRY_ID
+GROUP BY c.COUNTRY_NAME,w.WAREHOUSE_NAME)
+credentials=(aws_key_id='AKIA6ERB5MROQWZOIFSW' aws_secret_key='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')
+file_format = (type = csv field_optionally_enclosed_by='"' COMPRESSION=NONE) single = true;
+
