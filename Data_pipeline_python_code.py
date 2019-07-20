@@ -3,7 +3,8 @@ Created on Thu Jul 18 22:41:34 2019
 
 @author: laksh
 """
-
+#pip install cx_Oracle
+#pip install sqlalchemy
 import sqlalchemy as db
 import cx_Oracle
 engine = db.create_engine('oracle://USER10:USER10@oracle10.cgsyjtny2rf9.us-east-2.rds.amazonaws.com:1521/orcl')
