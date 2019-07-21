@@ -8,10 +8,10 @@ CREATE TABLE ORDER_ITEMS
 	"UNIT_PRICE" NUMBER(8,2) NOT NULL, 
 	 CONSTRAINT "PK_ORDER_ITEMS" PRIMARY KEY ("ORDER_ID", "ITEM_ID"));
 
-2nd step:TO import the data from s3 and put this in snowflake use this code  
+2nd step:TO import the data to snowflake from s3
 
 copy into ORDER_ITEMS
-from s3://shubhanandya/ORDER_ITEMS.csv credentials=(aws_key_id='AKIA6ERB5MROQWZOIFSW' aws_secret_key='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')
+from s3://shubhanandya/ORDER_ITEMS.csv credentials=(aws_key_id='<accessKey>' aws_secret_key='secretkey')
 file_format = (type = csv field_optionally_enclosed_by='"')
 on_error = 'continue';
 
@@ -28,6 +28,6 @@ ON l.LOCATION_ID=w.LOCATION_ID
 JOIN COUNTRIES c 
 ON c.COUNTRY_ID=l.COUNTRY_ID
 GROUP BY c.COUNTRY_NAME,w.WAREHOUSE_NAME)
-credentials=(aws_key_id='AKIA6ERB5MROQWZOIFSW' aws_secret_key='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')
+credentials=(aws_key_id='<accesskey>' aws_secret_key='<secretKey>')
 file_format = (type = csv field_optionally_enclosed_by='"' COMPRESSION=NONE) single = true;
 
